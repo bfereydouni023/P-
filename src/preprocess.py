@@ -1,18 +1,38 @@
+import tensorflow as tf
 from keras.utils import image_dataset_from_directory
 from config import train_directory, test_directory, image_size, batch_size, validation_split
 
+#constraints 
+batch_size = 128
+image_size = (150, 150)
+validation_split = 0.2
+dataset_path = "dataset"
+
 def _split_data(train_directory, test_directory, batch_size, validation_split):
     print('train dataset:')
-    train_dataset, validation_dataset = image_dataset_from_directory(
+    train_dataset = image_dataset_from_directory(
         train_directory,
         label_mode='categorical',
         color_mode='rgb',
         batch_size=batch_size,
         image_size=image_size,
         validation_split=validation_split,
-        subset="both",
+        subset="training",
         seed=47
     )
+
+    print('validation dataset:')
+    validation_dataset = image_dataset_from_directory(
+        train_directory,
+        label_mode='categorical',
+        color_mode='rgb',
+        batch_size=batch_size,
+        image_size=image_size,
+        validation_split=validation_split,
+        subset="validation",
+        seed=47
+    )
+
     print('test dataset:')
     test_dataset = image_dataset_from_directory(
         test_directory,
@@ -20,8 +40,9 @@ def _split_data(train_directory, test_directory, batch_size, validation_split):
         color_mode='rgb',
         batch_size=batch_size,
         image_size=image_size,
-        shuffle=False
+        shuffle=False  
     )
+
 
     return train_dataset, validation_dataset, test_dataset
 
